@@ -3,5 +3,4 @@ class Answer < ActiveRecord::Base
 
 	validates :text, presence: true, length: { minimum: 10, maximum: 1000 }
 
-
 end
