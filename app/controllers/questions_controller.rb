@@ -1,5 +1,4 @@
 class QuestionsController < ApplicationController
-
   before_action :load_question, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -25,16 +24,14 @@ class QuestionsController < ApplicationController
 
   def update
     if @question.update(question_params)
-      redirect_to question_path, notice: 'Вопрос успешно обновлен'
+      redirect_to @question, notice: 'Вопрос успешно обновлен'
     else
-      render 'questions/edit'
+      render 'edit'
     end
   end
 
   def destroy
-    if @question.destroy
-      redirect_to questions_path
-    end
+    redirect_to questions_path if @question.destroy
   end
 
   private
@@ -44,6 +41,6 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body)
+    params.require(:question).permit(:title, :text)
   end
 end

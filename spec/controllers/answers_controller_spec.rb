@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 describe AnswersController do
-  let!(:question) { create(:question) }
-  let(:answer) { create(:answer, question_id: question.id) }
+  let!(:question) { FactoryGirl.create(:question) }
+  let(:answer) { FactoryGirl.create(:answer, question_id: question.id) }
 
   describe 'GET #new' do
     before { get :new, question_id: question.id }
@@ -20,21 +20,21 @@ describe AnswersController do
   describe 'POST #create' do
     context ' create answer with valid attributes' do
       it 'try save new answer in database' do
-        expect { post :create, question_id: question.id, answer: attributes_for(:answer) }
+        expect { post :create, question_id: question.id, answer: FactoryGirl.attributes_for(:answer) }
             .to change(Answer, :count).by(1)
       end
       it 'redirect to question#show view' do
-        post :create, question_id: question.id, answer: attributes_for(:answer)
+        post :create, question_id: question.id, answer: FactoryGirl.attributes_for(:answer)
         expect(response).to redirect_to question_path(id: question.id)
       end
     end
     context 'create answer with invalid attributes' do
       it 'try save new question, but not save' do
-        expect { post :create, question_id: question.id, answer: attributes_for(:invalid_answer) }
+        expect { post :create, question_id: question.id, answer: FactoryGirl.attributes_for(:invalid_answer) }
             .to_not change(Answer, :count)
       end
       it 're render new view' do
-        post :create, question_id: question.id, answer: attributes_for(:invalid_answer)
+        post :create, question_id: question.id, answer: FactoryGirl.attributes_for(:invalid_answer)
         expect(response).to render_template :new
       end
     end
@@ -44,26 +44,26 @@ describe AnswersController do
     context 'with valid attributes' do
       it 'it sets variable @answer  requested answer' do
         patch :update, question_id: question.id,
-              id: answer, answer: attributes_for(:answer)
+              id: answer, answer: FactoryGirl.attributes_for(:answer)
         expect(assigns(:answer)).to eq answer
       end
       it 'change answer attributes' do
         patch :update, question_id: question.id,
-              id: answer, answer: {body: 'new body'}
+              id: answer, answer: {text: 'new text'}
         answer.reload
-        expect(answer.body).to eq 'new body'
+        expect(answer.text).to eq 'new text'
       end
       it 'redirect to  question show view' do
         patch :update, question_id: question.id,
-              id: answer, answer: attributes_for(:answer)
+              id: answer, answer: FactoryGirl.attributes_for(:answer)
         expect(response).to redirect_to question_path(id: question.id)
       end
     end
     context 'with invalid attributes' do
       before { patch :update, question_id: question.id,
-                     id: answer, answer: {body: nil} }
+                     id: answer, answer: {text: nil} }
       it 'do not change answer' do
-        expect(answer.body).to eq 'MyAnswer'
+        expect(answer.text).to eq 'MyAnswer'
       end
       it 're-render edit view' do
         expect(response).to render_template :edit
@@ -75,7 +75,7 @@ describe AnswersController do
     before { answer }
     it 'it sets variable @answer  requested question' do
       delete :destroy, question_id: question.id,
-             id: answer, answer: attributes_for(:answer)
+             id: answer, answer: FactoryGirl.attributes_for(:answer)
       expect(assigns(:answer)).to eq answer
     end
     it 'delete answer' do

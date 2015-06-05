@@ -1,2 +1,14 @@
-<h1>Questions#show</h1>
-<p>Find me in app/views/questions/show.html.erb</p>
+section.container.question_answers
+  h4= notice
+  br
+  hr
+  h3= @question.title
+  p
+    = @question.text
+  br
+  p= link_to 'Редактировать вопрос', edit_question_path(@question)
+  p= link_to 'Удалить вопрос', @question, method: :delete
+  p= link_to 'Добавить ответ', new_question_answer_path(@question)
+  hr
+  div.answers
+    = render 'answers/answers'

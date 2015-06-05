@@ -2,10 +2,10 @@ require 'rails_helper'
 
 describe QuestionsController do
 
-  let(:question) { create(:question) }
+  let(:question) { FactoryGirl.create(:question) }
 
   describe 'GET #index' do
-    let(:questions) { create_list(:question, 2) }
+    let(:questions) { FactoryGirl.create_list(:question, 2) }
     before { get :index }
     it 'populates an array of all questions' do
       expect(assigns(:questions)).to match_array(questions)
@@ -51,21 +51,21 @@ describe QuestionsController do
   describe 'POST #create' do
     context ' create question with valid attributes' do
       it 'try save new question in database' do
-        expect { post :create, question: attributes_for(:question) }
+        expect { post :create, question: FactoryGirl.attributes_for(:question) }
             .to change(Question, :count).by(1)
       end
       it 'redirect to questions#index view' do
-        post :create, question: attributes_for(:question)
+        post :create, question: FactoryGirl.attributes_for(:question)
         expect(response).to redirect_to questions_path
       end
     end
     context ' create question with invalid attributes' do
       it 'try save new question, but not save' do
-        expect { post :create, question: attributes_for(:invalid_question) }
+        expect { post :create, question: FactoryGirl.attributes_for(:invalid_question) }
             .to_not change(Question, :count)
       end
       it 're render new view' do
-        post :create, question: attributes_for(:invalid_question)
+        post :create, question: FactoryGirl.attributes_for(:invalid_question)
         expect(response).to render_template :new
       end
     end
@@ -74,27 +74,27 @@ describe QuestionsController do
   describe 'PATCH #update' do
     context 'with valid attributes' do
       it 'it sets variable @question  requested question' do
-        patch :update, id: question, question: attributes_for(:question)
+        patch :update, id: question, question: FactoryGirl.attributes_for(:question)
         expect(assigns(:question)).to eq question
       end
       it 'change question attributes' do
         patch :update, id: question,
-              question: {title: 'new title', body: 'new body'}
+              question: {title: 'new title', text: 'new body'}
         question.reload
         expect(question.title).to eq 'new title'
-        expect(question.body).to eq 'new body'
+        expect(question.text).to eq 'new body'
       end
       it 'redirect to show view' do
-        patch :update, id: question, question: attributes_for(:question)
+        patch :update, id: question, question: FactoryGirl.attributes_for(:question)
         expect(response).to redirect_to question_path
       end
     end
     context 'with invalid attributes' do
       before { patch :update, id: question,
-                     question: {title: 'new title', body: nil} }
+                     question: {title: 'new title', text: nil} }
       it 'do not change question' do
         expect(question.title).to eq 'MyQuestion'
-        expect(question.body).to eq 'MyText'
+        expect(question.text).to eq 'MyText'
       end
       it 're-render edit view' do
         expect(response).to render_template :edit
