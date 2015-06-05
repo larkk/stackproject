@@ -29,9 +29,14 @@ class QuestionsController < ApplicationController
       render 'edit'
     end
   end
-
+  def delete
+    @question = Question.find(params[:id])
+  end
+  
   def destroy
-    redirect_to questions_path if @question.destroy
+    if @question.destroy
+    redirect_to questions_path, notice: 'Вопрос "'+@question.title+'" удален' 
+    end
   end
 
   private

@@ -75,7 +75,7 @@ describe AnswersController do
     before { answer }
     it 'it sets variable @answer  requested question' do
       delete :destroy, question_id: question.id,
-             id: answer, answer: FactoryGirl.attributes_for(:answer)
+             id: answer, answer:  FactoryGirl.attributes_for(:answer)
       expect(assigns(:answer)).to eq answer
     end
     it 'delete answer' do

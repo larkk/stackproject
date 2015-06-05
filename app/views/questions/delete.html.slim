@@ -1,2 +1,9 @@
-<h1>Questions#delete</h1>
-<p>Find me in app/views/questions/delete.html.erb</p>
+= form_for(:question, :url => {:action => 'destroy', :id => @question.id}) do |f|
+
+    p =Удалить вопрос?
+
+    p = @question.title 
+
+    <iv class="form-buttons"
+          = submit_tag("Delete Page") 
+    -end

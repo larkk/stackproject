@@ -1,4 +1,3 @@
-section.container.question_answers
   h4= notice
   br
   hr
@@ -7,8 +6,8 @@ section.container.question_answers
     = @question.text
   br
   p= link_to 'Редактировать вопрос', edit_question_path(@question)
-  p= link_to 'Удалить вопрос', @question, method: :delete
+  p= link_to 'Удалить вопрос', delete_question_path(@question)
   p= link_to 'Добавить ответ', new_question_answer_path(@question)
   hr
-  div.answers
+  div
     = render 'answers/answers'
