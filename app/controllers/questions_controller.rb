@@ -35,7 +35,7 @@ class QuestionsController < ApplicationController
   
   def destroy
     if @question.destroy
-    redirect_to questions_path, notice: 'Вопрос "'+@question.title+'" удален' 
+    redirect_to questions_path, notice: "Вопрос #{@question.title} удален"
     end
   end
 

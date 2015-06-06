@@ -1,9 +1,4 @@
-= form_for(:question, :url => {:action => 'destroy', :id => @question.id}) do |f|
-
     p =Удалить вопрос?
 
     p = @question.title 
-
-    <iv class="form-buttons"
-          = submit_tag("Delete Page") 
-    -end
+    = link_to 'Удалить', [@question], method: :destroy
