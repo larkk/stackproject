@@ -1,9 +1,9 @@
-H3 Ответы
+H3 Answers
   - @question.answers.each do |answer|
     - if answer.persisted?
       br
       div
         p = answer.text
         br
-        p = link_to 'Редактировать', edit_question_answer_path(@question, answer)
-        p = link_to 'Удалить', [@question, answer], method: :delete
+        p = link_to 'Edit answer', edit_question_answer_path(@question, answer)
+        p = link_to 'Delete answer', [@question, answer], method: :delete
