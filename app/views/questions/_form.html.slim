@@ -7,7 +7,7 @@
     = f.label :text
     = f.text_area :text, class: 'form-control'
   p
-    = f.submit
+    = f.submit 'Create'
 
   -@question.errors.full_messages.each do |error|
     ul

@@ -7,7 +7,19 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-
+ li
+            = link_to 'Все вопросы', root_path
+          - if current_user
+            li
+              = link_to 'Выйти', destroy_user_session_path, method: :delete
+          - else
+            li
+              = link_to 'Регистрация', new_user_registration_path
+            li
+              = link_to 'Войти', new_user_session_path
+    br
+<p class="notice"><%= notice %></p>
+<p class="alert"><%= alert %></p>
 <%= yield %>
 
 </body>
