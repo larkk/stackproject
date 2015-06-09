@@ -18,7 +18,7 @@ feature 'User deletes his question' do
 
   scenario 'User tries to delete other persons question' do
 
-    question = create(:question)
+   # question = create(:question) #вот тут это не от лица полльзователя разве делается???
     visit question_path(question)
     expect(page).to_not have_link 'Delete question'
 
