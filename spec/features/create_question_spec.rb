@@ -5,13 +5,12 @@ feature 'Create Question', %q{
 	As an autentificated user
 	I want to be able to ask questions
 }do
+   
+   given!(:user) { create(:user) }
 
  scenario 'Authenticated user creates question'do
 
-    visit new_question_path
-    fill_in 'Email', with: 'alice@test.ru'
-   	fill_in 'Password', with: '12345678'
-   	click_on 'Log in'
+    sign_in(user)
     visit questions_path
    	click_on 'Ask question'
    	fill_in 'title', with: 'Test question'
@@ -19,10 +18,9 @@ feature 'Create Question', %q{
    	click_on 'Create'
 
    	expect(page).to have_content 'Your question is created.'
-   	#он видит содержимое вопроса, находится на странице вопроса
  end
 
-  scenario 'non-authenticated user tries to create questuin' do
+  scenario 'non-authenticated user tries to create question' do
     visit questions_path
     click_on 'Ask question'
 

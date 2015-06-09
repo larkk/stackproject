@@ -12,6 +12,7 @@ feature 'User deletes his question' do
     click_on 'Delete question'
     expect(page).to have_content 'Deleted successfully'
     expect(current_path).to eq questions_path
+    expect(page).to_not have_content question.title
 
   end
 

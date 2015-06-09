@@ -1,6 +1,7 @@
 class QuestionsController < ApplicationController
-  before_action :load_question, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!, except: [ :index, :show ]
+  before_action :load_question, only: [:show, :edit, :update, :destroy]
+
 
   def index
     @questions = Question.all
@@ -15,7 +16,7 @@ class QuestionsController < ApplicationController
   end
 
   def create
-    @question = Question.new(question_params)
+    @question = Question.new(questions_params.merge(user: current_user))
     if @question.save
       redirect_to questions_path, notice: 'Your question is created.'
     else
@@ -25,7 +26,7 @@ class QuestionsController < ApplicationController
 
   def update
     if @question.update(question_params)
-      redirect_to @question, notice: 'Вопрос успешно обновлен'
+      redirect_to @question, notice: 'Your question was successfully updated'
     else
       render 'edit'
     end
@@ -35,8 +36,9 @@ class QuestionsController < ApplicationController
   end
   
   def destroy
-    if @question.destroy
-    redirect_to questions_path, notice: "Вопрос #{@question.title} удален"
+    if @question.user_id == current_user.id
+    @question.destroy
+    redirect_to questions_path, notice: "The question '#{@question.title}' deleted"
     end
   end
 

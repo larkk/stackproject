@@ -5,9 +5,12 @@
   p
     = @question.text
   br
+  - if current_user
+  p= link_to 'Your answer', new_question_answer_path(@question)v
+  - if current_user and current_user.id == question.user_id
   p= link_to 'Edit question', edit_question_path(@question)
   p=link_to "Delete question", @question, method: :delete
-  p= link_to 'Your answer', new_question_answer_path(@question)
+ 
   hr
   div
     = render 'answers/answers'
