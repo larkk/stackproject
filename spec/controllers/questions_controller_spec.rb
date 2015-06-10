@@ -112,6 +112,13 @@ describe QuestionsController do
     it 'delete question' do
       expect { delete :destroy, id: question }.to change(Question, :count).by(-1)
     end
+
+     it 'rejects deletion of an foreign question' do
+      user = create(:user)
+      other_question = create(:other_question, user: user)
+      expect { delete :destroy, id: other_question }.not_to change(Question, :count)
+    end
+
     it 'redirect to questions#index view' do
       delete :destroy, id: question
       expect(response).to redirect_to questions_path

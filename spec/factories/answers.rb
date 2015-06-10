@@ -1,9 +1,25 @@
 FactoryGirl.define do
-  factory :answer do
-    text 'MyAnswerrrr'
+  factory :answer, class: 'Answer' do
+    text 'blahblah'
     question
+    user
   end
-  factory :invalid_answer, class: 'Answer' do
-   text nil
+
+  factory :other_answer, class: 'Answer' do
+    text 'other blahblah'
+    question
+    user
+  end
+
+  factory :a_trash, class: 'Answer' do
+    text nil
+    question
+    user
+  end
+
+  factory :polymorfic_answer, class: 'Answer' do
+    sequence(:body) { |n| "Answer_Body-#{n}" }
+    question
+    user
   end
 end

@@ -8,17 +8,24 @@ feature 'User delete answer', %q{
   given!(:question) { create(:question, user: user) }
   given!(:answer) { create(:answer, question: question, user: user) }
 
-  scenario 'User can delete only his answer' do
+  scenario 'User can delete his answer' do
 
-    sign_in(user)
+    log_in(answer.user)
     visit question_path(question)
     click_on 'Delete answer'
     expect(page).to have_content 'Your answer was deleted successfully'
 
   end
 
-  scenario 'User tries to delete other persons answer' do
+  scenario 'Guest cannot delete answers' do
     visit question_path(question)
+    expect(page).to_not have_link 'Delete answer'
+
+  end
+
+  scenario 'Autenticated user tries to delete other persons answer' do
+    sign_in(user)
+    visit question_path(answer.question)
     expect(page).to_not have_link 'Delete answer'
 
   end

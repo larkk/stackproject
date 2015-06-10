@@ -2,8 +2,9 @@ require 'rails_helper'
 
 feature 'User deletes his question' do
 
-   given!(:user) { create(:user) }
-   given!(:question) { create(:question, user: user) }
+   given(:user) { create(:user) }
+   given(:question) { create(:question, user: user) }
+   given(:other_question) { create(:other_question) }
 
   scenario 'User can delete only his question' do
 
@@ -16,9 +17,16 @@ feature 'User deletes his question' do
 
   end
 
-  scenario 'User tries to delete other persons question' do
+  scenario 'A gest cannot delete questions' do
 
     visit question_path(question)
+    expect(page).to_not have_link 'Delete question'
+
+  end
+
+  scenario 'Autenticated user tries to delete other persons question' do
+    sign_in(user)
+    visit question_path(other_question)
     expect(page).to_not have_link 'Delete question'
 
   end
