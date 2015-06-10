@@ -1,8 +1,11 @@
 require 'rails_helper'
 
 describe AnswersController do
-  let!(:question) { create(:question) }
-  let(:answer) { create(:answer, question_id: question.id) }
+  let(:user) { create(:user) }
+  let(:question) { create(:question) }
+  let(:answer) { create(:answer, user: user)}
+  
+     before(:each) { sign_in(user) }
 
   describe 'GET #new' do
     before { get :new, question_id: question.id }
