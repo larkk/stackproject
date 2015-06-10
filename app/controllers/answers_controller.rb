@@ -8,28 +8,28 @@ class AnswersController < ApplicationController
   end
 
   def create
-    @answer = @question.answers.new(answer_params)
-    if @answer.save
-      redirect_to question_path(params[:question_id]),
-                  notice: 'Ответ успешно создан'
+    if @answer = @question.answers.create(answers_params.merge(user: current_user))
+      redirect_to @question, notice: 'You create the answer'
     else
       render :new
     end
   end
 
   def update
-    if @answer.update(answer_params)
-      redirect_to question_path(params[:question_id]),
-                  notice: 'Ответ обновлен'
+    if @answer = @question.answers.update(answers_params.merge(user: current_user))
+      redirect_to @question, notice: 'Answer updated'
     else
       render :edit
     end
   end
 
   def destroy
-    @answer.destroy
-    redirect_to question_path(params[:question_id]),
-                notice: 'Ответ удален'
+    if answer.user_id == current_user.id
+      @answer.destroy
+      redirect_to @question, notice: 'Answer destroy'
+    else
+      redirect_to @question
+    end
   end
 
   private

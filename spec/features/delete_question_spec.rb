@@ -2,12 +2,12 @@ require 'rails_helper'
 
 feature 'User deletes his question' do
 
+   given!(:user) { create(:user) }
+   given!(:question) { create(:question, user: user) }
 
   scenario 'User can delete only his question' do
 
-    user = User.create(attributes_for(:user))
     sign_in(user)
-    question = user.questions.create(attributes_for(:question))
     visit question_path(question)
     click_on 'Delete question'
     expect(page).to have_content 'Deleted successfully'
@@ -18,7 +18,6 @@ feature 'User deletes his question' do
 
   scenario 'User tries to delete other persons question' do
 
-   # question = create(:question) #вот тут это не от лица полльзователя разве делается???
     visit question_path(question)
     expect(page).to_not have_link 'Delete question'
 

@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [ :index, :show ]
-  before_action :load_question, only: [:show, :edit, :update, :destroy]
+  before_action :find_question, only: [:show, :edit, :update, :destroy]
 
 
   def index
@@ -18,7 +18,7 @@ class QuestionsController < ApplicationController
   def create
     @question = Question.new(question_params.merge(user: current_user))
     if @question.save
-      redirect_to questions_path, notice: 'Your question is created.'
+      redirect_to @question, notice: 'Your question is created.'
     else
       render :new
     end
@@ -31,20 +31,23 @@ class QuestionsController < ApplicationController
       render 'edit'
     end
   end
+
   def delete
     @question = Question.find(params[:id])
   end
   
   def destroy
     if @question.user_id == current_user.id
-    @question.destroy
-    redirect_to questions_path, notice: "The question '#{@question.title}' deleted"
+      @question.destroy
+      redirect_to questions_path, notice: "The question '#{@question.title}' deleted"
+    else
+      redirect_to @question
     end
   end
 
   private
 
-  def load_question
+  def find_question
     @question = Question.find(params[:id])
   end
 
