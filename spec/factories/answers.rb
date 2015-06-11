@@ -1,11 +1,11 @@
 FactoryGirl.define do
   factory :answer, class: 'Answer' do
-    text 'blahblah'
+    text 'blahblahblah'
     question
     user
   end
 
-  factory :other_answer, class: 'Answer' do
+  factory :invalid_answer, class: 'Answer' do
     text 'other blahblah'
     question
     user

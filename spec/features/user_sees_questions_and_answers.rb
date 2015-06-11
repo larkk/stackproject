@@ -13,4 +13,13 @@ feature 'User can see all questions', %q{
     end
   end
 
+  given(:question) {create(:question)}
+  
+  scenario 'a Guest can view all Answers for a specific Question' do
+    answers = create_list(:polymorfic_answer, 10, question: question)
+    visit question_path(answers.first.question)
+    answers.each do |a|
+      expect(page).to have_content "#{a.body}"
+    end
+  end
 end

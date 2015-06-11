@@ -6,13 +6,13 @@ FactoryGirl.define do
 
   factory :question do
     title
-    text "MyText"
+    text "My text in question"
     user
   end
 
   factory :other_question, class: 'Question' do
     title
-    body "Other text"
+    text "Other text"
     user
   end
 

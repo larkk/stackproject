@@ -25,7 +25,7 @@ feature 'User deletes his question' do
   end
 
   scenario 'Autenticated user tries to delete other persons question' do
-    sign_in(user)
+    log_in(uquestion.user)
     visit question_path(other_question)
     expect(page).to_not have_link 'Delete question'
 

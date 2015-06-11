@@ -59,7 +59,7 @@ describe QuestionsController do
       end
       it 'redirect to questions#index view' do
         post :create, question: attributes_for(:question)
-        expect(response).to redirect_to question_path
+        expect(response).to redirect_to question
       end
     end
     context ' create question with invalid attributes' do
