@@ -55,11 +55,11 @@ describe QuestionsController do
     context ' create question with valid attributes' do
       it 'try save new question in database' do
         expect { post :create, question: attributes_for(:question) }
-            .to change(Question, :count).by(1)
+            .to change(current_user.questions, :count).by(1)
       end
       it 'redirect to questions#index view' do
         post :create, question: attributes_for(:question)
-        expect(response).to redirect_to question
+        expect(response).to redirect_to question_path(id: question.id)
       end
     end
     context ' create question with invalid attributes' do
@@ -98,7 +98,7 @@ describe QuestionsController do
                      question: {title: 'new title', text: nil} }
       it 'do not change question' do
         #expect(question.title).to eq 'MyQuestion'
-        expect(question.text).to eq 'MyText'
+        expect(question.text).to eq 'MyText in question'
       end
       it 're-render edit view' do
         expect(response).to render_template :edit
@@ -113,9 +113,9 @@ describe QuestionsController do
       expect { delete :destroy, id: question }.to change(Question, :count).by(-1)
     end
 
-     it 'rejects deletion of an foreign question' do
-      user = create(:user)
-      other_question = create(:other_question, user: user)
+    it 'rejects deletion of an foreign question' do
+      user1 = create(:user)
+      other_question = create(:question1, user: user1)
       expect { delete :destroy, id: other_question }.not_to change(Question, :count)
     end
 

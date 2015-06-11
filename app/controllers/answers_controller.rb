@@ -16,7 +16,7 @@ class AnswersController < ApplicationController
   end
 
   def update
-    if @answer = @question.answers.update(answers_params.merge(user: current_user))
+    if @answer = @question.answers.update(answers_params)
       redirect_to @question, notice: 'Answer updated'
     else
       render :edit

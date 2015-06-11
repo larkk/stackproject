@@ -4,7 +4,7 @@ feature 'User sing up' do
     user = build(:user)
 
     visit root_path
-    click_on 'Sign_up'
+    click_on 'Sign up'
     fill_in 'Email', with: user.email
     fill_in 'Password', with: user.password
     fill_in 'Password confirmation', with: user.password

@@ -2,8 +2,10 @@ require 'rails_helper'
 
 describe AnswersController do
   let(:user) { create(:user) }
+  let(:another_user) { create(:user) }
   let(:question) { create(:question) }
-  let(:answer) { create(:answer, user: user)}
+  let(:answer) { create(:answer, user: user, question: question)}
+  let(:another_answer) {create(:answer, user: another_user)}
   
      before(:each) { sign_in(user) }
 
@@ -45,6 +47,8 @@ describe AnswersController do
   end
 
   describe 'PATCH #update' do
+    before { answer.update!(user: user) }
+
     context 'with valid attributes' do
       it 'it sets variable @answer  requested answer' do
         patch :update, question_id: question.id,
@@ -84,10 +88,15 @@ describe AnswersController do
              id: answer, answer:  attributes_for(:answer)
       expect(assigns(:answer)).to eq answer
     end
-    it 'delete answer' do
+    it 'delete own answer' do
       expect { delete :destroy, question_id: question.id,
-                      id: answer }.to change(Answer, :count).by(-1)
+                      id: answer, user_id: user.id }.to change(Answer, :count).by(-1)
     end
+    it 'delete foreign answer' do
+      expect { delete :destroy, question_id: question.id,
+                      id: another_answer }.to_not change(Answer, :count).by(-1)
+    end
+
     it 'redirect to questions#show view' do
       delete :destroy, question_id: question.id, id: answer
       expect(response).to redirect_to question_path(id: question.id)

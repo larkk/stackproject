@@ -20,18 +20,18 @@ feature 'The user create answer', %q{
 
     sign_in(user)
     visit question_path(linked_question)
-    fill_in 'Your answer:', with: 'My answer'
+    fill_in 'Your answer:', with: 'My answerrr'
     click_on 'Add answer'
 
     expect(current_path).to eq question_path(question)
-    expect(page).to have_content answer.text
+    expect(page).to have_content 'My answerrr'
 
   end
 
-  scenario 'a User can post Answers to foreign Questions', js: true do
-    log_in(user)
+  scenario 'a User can post Answers to foreign Questions' do
+    sign_in(user)
     visit question_path(question)
-    fill_in 'Text', with: answer.body
+    fill_in 'Text', with: answer.text
     click_on 'Add answer'
     expect(current_path).to eq question_path(question)
     expect(page).to have_content answer.text

@@ -4,9 +4,9 @@ feature 'User deletes his question' do
 
    given(:user) { create(:user) }
    given(:question) { create(:question, user: user) }
-   given(:other_question) { create(:other_question) }
+   given(:question1) { create(:question1) }
 
-  scenario 'User can delete only his question' do
+  scenario 'User can delete his question' do
 
     sign_in(user)
     visit question_path(question)
@@ -25,8 +25,8 @@ feature 'User deletes his question' do
   end
 
   scenario 'Autenticated user tries to delete other persons question' do
-    log_in(uquestion.user)
-    visit question_path(other_question)
+    sign_in(question.user)
+    visit question_path(question1)
     expect(page).to_not have_link 'Delete question'
 
   end

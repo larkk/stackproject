@@ -6,7 +6,7 @@ feature 'The user can log out' do
 
   scenario 'User tries to log out' do
 
-   log_in(user)
+    sign_in(user)
     click_on 'Log out'
 
    expect(page).to have_content 'Signed out successfully.'
