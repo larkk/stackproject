@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 describe QuestionsController do
-
-  let(:question) { create(:question) }
+  
+  let(:user) { create(:user) }
+  let(:question) { create(:question, user_id: user.id) }
 
   describe 'GET #index' do
     let(:questions) { create_list(:question, 2) }
@@ -53,15 +54,19 @@ describe QuestionsController do
   describe 'POST #create' do
     sign_in_user
     context ' create question with valid attributes' do
+
       it 'try save new question in database' do
         expect { post :create, question: attributes_for(:question) }
-            .to change(current_user.questions, :count).by(1)
+            .to change(user.questions, :count).by(1)
       end
+
       it 'redirect to questions#index view' do
         post :create, question: attributes_for(:question)
         expect(response).to redirect_to question_path(id: question.id)
       end
+
     end
+
     context ' create question with invalid attributes' do
       it 'try save new question, but not save' do
         expect { post :create, question: attributes_for(:invalid_question) }
@@ -98,7 +103,7 @@ describe QuestionsController do
                      question: {title: 'new title', text: nil} }
       it 'do not change question' do
         #expect(question.title).to eq 'MyQuestion'
-        expect(question.text).to eq 'MyText in question'
+        expect(question.text).to eq 'Mytext in question'
       end
       it 're-render edit view' do
         expect(response).to render_template :edit
@@ -107,20 +112,23 @@ describe QuestionsController do
   end
 
   describe 'DELETE #destroy' do
-    sign_in_user
-     before { question.update(user: @user) }
+   before(:each) do
+      sign_in(user)
+      question
+    end
+      
     it 'delete question' do
-      expect { delete :destroy, id: question }.to change(Question, :count).by(-1)
+      expect { delete :destroy, id: question, user_id: user.id }.to change(Question, :count).by(-1)
     end
 
     it 'rejects deletion of an foreign question' do
       user1 = create(:user)
-      other_question = create(:question1, user: user1)
+      other_question = create(:question, user: user1)
       expect { delete :destroy, id: other_question }.not_to change(Question, :count)
     end
 
     it 'redirect to questions#index view' do
-      delete :destroy, id: question
+      delete :destroy, id: question, user_id: user.id
       expect(response).to redirect_to questions_path
     end
   end

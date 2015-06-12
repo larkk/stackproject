@@ -19,9 +19,10 @@ feature 'The user create answer', %q{
   scenario 'Authenticated user creates answer to his quiestion' do
 
     sign_in(user)
-    visit question_path(linked_question)
-    fill_in 'Your answer:', with: 'My answerrr'
+    visit question_path(question)
     click_on 'Add answer'
+    fill_in 'Your answer:', with: 'My answerrr'
+    click_button 'Add answer'
 
     expect(current_path).to eq question_path(question)
     expect(page).to have_content 'My answerrr'

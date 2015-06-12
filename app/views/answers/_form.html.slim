@@ -1,8 +1,8 @@
 = form_for [@question, @answer], html: {class: 'form-horizontal'} do |f|
-  = f.label :text, 'Ответ'
+  = f.label :text, 'Your answer'
   = f.text_area :text, class: 'form-control'
   br
-  = f.submit 'Save'
+  = f.submit 'Add answer'
   br
   -@answer.errors.full_messages.each do |error|
     ul

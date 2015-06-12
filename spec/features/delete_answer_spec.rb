@@ -1,24 +1,12 @@
 require 'rails_helper'
 
-feature 'User delete answer', %q{
-  User can delete only own answer
-} do
-
+feature 'Deleting Answers' do
   given!(:user1) { create(:user) }
-  given!(:user2) { create(:user) }
+  given!(:user) { create(:user) }
   given!(:question1) { create(:question, user: user1) }
-  given!(:question2) { create(:question, user: user2) }
+  given!(:question) { create(:question, user: user) }
   given!(:answer1) { create(:answer, question: question1, user: user1) }
-  given!(:answer2) { create(:answer, question: question2, user: user2)}
-  scenario 'User can delete his answer' do
-
-    sign_in(user1)
-    visit question_path(question1)    
-    expect(page).to have_content answer.text
-    click_on 'Delete answer'
-    expect(page).not_to have_content answer.text
-
-  end
+  given!(:answer) { create(:answer, question: question, user: user)}
 
   scenario 'Guest cannot delete answers' do
     visit question_path(question1)
@@ -26,12 +14,16 @@ feature 'User delete answer', %q{
 
   end
 
-  scenario 'Autenticated user tries to delete other persons answer' do
-    sign_in(user1)
-    visit question_path(question2)
-    expect(page).to_not have_link 'Delete answer'
-
+  scenario 'a User can delete only his own Answers' do
+    sign_in(answer.user)
+    visit question_path(id: question.id)
+    click_link 'Delete answer'
+    expect(page).not_to have_content answer.body
   end
 
-
+  scenario 'a User cannot delete foreign Answers' do
+    sign_in(user)
+    visit question_path(question1)
+    expect(page).not_to have_content 'Delete answer'
+  end
 end

@@ -2,10 +2,8 @@ require 'rails_helper'
 
 describe AnswersController do
   let(:user) { create(:user) }
-  let(:another_user) { create(:user) }
-  let(:question) { create(:question) }
-  let(:answer) { create(:answer, user: user, question: question)}
-  let(:another_answer) {create(:answer, user: another_user)}
+  let(:question) { create(:question, user_id: user.id) }
+  let(:answer) { create(:answer, user_id: user.id, question_id: question.id)}
   
      before(:each) { sign_in(user) }
 
@@ -25,6 +23,13 @@ describe AnswersController do
 
   describe 'POST #create' do
     context ' create answer with valid attributes' do
+      
+        it 'answer user is the current user' do
+        post :create, question_id: question.id,
+             answer: attributes_for(:answer)
+        expect(assigns(:answer).user).to eq subject.current_user
+      end
+
       it 'try save new answer in database' do
         expect { post :create, question_id: question.id, answer: attributes_for(:answer) }
             .to change(question.answers, :count).by(1)
@@ -47,23 +52,23 @@ describe AnswersController do
   end
 
   describe 'PATCH #update' do
-    before { answer.update!(user: user) }
+    before { user }
+    before { question }
+    before { answer }
 
     context 'with valid attributes' do
       it 'it sets variable @answer  requested answer' do
-        patch :update, question_id: question.id,
-              id: answer, answer: attributes_for(:answer)
+        patch :update, id: answer, question_id: question.id, answer: attributes_for(:answer)
         expect(assigns(:answer)).to eq answer
       end
       it 'change answer attributes' do
-        patch :update, question_id: question.id,
-              id: answer, answer: {text: 'new text'}
+        patch :update, id: answer, question_id: question.id, answer: {text: 'My new text'}
         answer.reload
-        expect(answer.text).to eq 'new text'
+        expect(answer.text).to eq 'My new text'
       end
       it 'redirect to  question show view' do
-        patch :update, question_id: question.id,
-              id: answer, answer: attributes_for(:answer)
+        patch :update, question_id: question.id, user_id: user.id,
+              id: answer.id, answer: attributes_for(:answer)
         expect(response).to redirect_to question_path(id: question.id)
       end
     end
@@ -72,7 +77,7 @@ describe AnswersController do
                      id: answer, answer: {text: nil} }
 
       it 'do not change answer' do
-        expect(answer.text).to eq 'MyAnswer'
+        expect(answer.text).to eq 'blahblahblah'
       end
       it 're-render edit view' do
         expect(response).to render_template :edit
@@ -81,8 +86,9 @@ describe AnswersController do
   end
 
   describe 'DELETE #destroy' do
+    before { question }
     before { answer }
-
+ 
     it 'it sets variable @answer  requested question' do
       delete :destroy, question_id: question.id,
              id: answer, answer:  attributes_for(:answer)
@@ -93,8 +99,10 @@ describe AnswersController do
                       id: answer, user_id: user.id }.to change(Answer, :count).by(-1)
     end
     it 'delete foreign answer' do
-      expect { delete :destroy, question_id: question.id,
-                      id: another_answer }.to_not change(Answer, :count).by(-1)
+      other_user = create(:user)
+      other_question = create(:question, user: other_user)
+      other_answer = create(:answer, question: other_question, user: other_user)
+      expect { delete :destroy, id: other_answer}.to_not change(Answer, :count).by(-1)
     end
 
     it 'redirect to questions#show view' do
