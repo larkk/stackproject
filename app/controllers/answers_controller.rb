@@ -3,16 +3,9 @@ class AnswersController < ApplicationController
   before_action :load_question, only: [:create, :new, :update, :destroy]
   before_action :load_answer, only: [:update, :destroy]
 
-  def new
-    @answer = @question.answers.new
-  end
-
+  
   def create
-    if @answer = @question.answers.create(answers_params.merge(user: current_user))
-      redirect_to @question, notice: 'You create the answer'
-    else
-      render :new
-    end
+    @answer = @question.answers.create(answers_params.merge(user: current_user))
   end
 
   def update
