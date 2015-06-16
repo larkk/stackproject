@@ -12,6 +12,8 @@
     p=link_to "Delete question", @question, method: :delete
  
   hr
-  div
-    = render 'answers/answers'
+.answers
+  p = render 'answers/answers'
+.create-answer
+  p= render 'answers/form'
    

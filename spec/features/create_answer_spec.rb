@@ -16,7 +16,7 @@ feature 'The user create answer', %q{
 
   end
 
-  scenario 'Authenticated user creates answer to his quiestion' do
+  scenario 'Authenticated user creates answer to his quiestion', js: true do
 
     sign_in(user)
     visit question_path(question)
@@ -25,17 +25,26 @@ feature 'The user create answer', %q{
     click_button 'Add answer'
 
     expect(current_path).to eq question_path(question)
+    within '.answers' do
     expect(page).to have_content 'My answerrr'
-
+    end
   end
 
-  scenario 'a User can post Answers to foreign Questions' do
+  scenario 'a User can post Answers to foreign Questions', js: true do
     sign_in(user)
     visit question_path(question)
-    fill_in 'Text', with: answer.text
+    fill_in 'Text', with: 'My answer to another question'
     click_on 'Add answer'
     expect(current_path).to eq question_path(question)
-    expect(page).to have_content answer.text
+    expect(page).to have_content 'My answer to another question'
+  end
+
+  scenario 'User tries to create an invalid answer', js: true do
+    sign_in(user)
+    visit question_path(question)
+    click_on 'Create answer'
+
+    expect(page).to have_content "can't be blank"
   end
 
 end
