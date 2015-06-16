@@ -1,19 +1,19 @@
-  h4= notice
-  br
-  hr
-  h3= @question.title
-  p
-    = @question.text
-  br
-  - if current_user
-    p= link_to 'Your answer', new_question_answer_path(@question)
-  - if current_user and current_user.id == @question.user_id
+h3= @question.title
+p
+  = @question.text
+  - if user_signed_in? && @question.user_id == current_user.id
     p= link_to 'Edit question', edit_question_path(@question)
-    p=link_to "Delete question", @question, method: :delete
- 
-  hr
-.answers
-  p = render 'answers/answers'
-.create-answer
-  p= render 'answers/form'
-   
+    p= link_to 'Delete question', @question, method: :delete
+  
+
+div.answers
+  H3 Answers
+  = render @question.answers
+
+- if user_signed_in?
+  = form_for [@question, @answer], remote: true do |f|
+    .answer_errors
+    = f.label :text, 'Answer here'
+    = f.text_area :text
+    br
+    = f.submit 'Save'

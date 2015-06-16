@@ -1,29 +1,25 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, except: [ :index, :show ]
-  before_action :load_question, only: [:create, :new, :update, :destroy]
-  before_action :load_answer, only: [:update, :destroy]
+  before_action :authenticate_user!
+  before_action :load_question, only: [:create]
+  before_action :load_answer, only: [:update, :destroy, :best_answer]
+  before_action :answer_user_compare, only: [:update, :destroy]
 
-  
   def create
-    @answer = @question.answers.create(answers_params.merge(user: current_user))
+    @answer = @question.answers.create(answer_params.merge(user: current_user))
   end
 
   def update
-    @answer = Answer.find(params[:id])
-    if @answer.update(answers_params)
-      redirect_to @question, notice: 'Answer updated'
-    else
-      render :edit
-    end
+     @answer.update(answer_params)
+     @question = @answer.question
   end
 
   def destroy
-    if @answer.user_id == current_user.id
-      @answer.destroy
-      redirect_to @question, notice: 'Answer destroy'
-    else
-      redirect_to @question
-    end
+    @answer.destroy!
+  end
+
+  def best_answer
+   @answer.set_best_answer
+    redirect_to @answer.question
   end
 
   private
@@ -36,7 +32,14 @@ class AnswersController < ApplicationController
     @answer = Answer.find(params[:id])
   end
 
-  def answers_params
-    params.require(:answer).permit(:text)
+  def answer_params
+    params.require(:answer).permit(:text,:user_id, :question_id)
+  end
+
+  def answer_user_compare
+    @answer = Answer.find(params[:id])
+    if @answer.user_id != current_user.id
+      redirect_to root_url, notice: 'Запрещено'
+    end
   end
 end

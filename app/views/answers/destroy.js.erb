@@ -3,6 +3,4 @@
      $("div.answer_errors").html("<%= j error %>");
   <% end %>
 <% else %>
-  $('.answers').append("<%= j render @answer %>");
-  $('textarea#answer_body').val('');
-<% end %>
+$('.answers').html("<%= j render 'answers/index' %>");

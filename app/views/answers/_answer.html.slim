@@ -1,0 +1,20 @@
+- if answer.persisted?
+  section.answer id = answer.id
+    - if answer.best
+      p =image_tag 'greeng.jpg', width: '32', height: '32', alt: 'Best answer'
+    p = answer.text
+
+    - if user_signed_in? && answer.user_id == current_user.id
+      p = link_to 'Edit answer', '', class: 'edit_answer-link', data: {answer_id: answer.id}
+      p = link_to 'Delete answer', answer, remote: true, method: :delete
+      p = form_for answer, remote: true do |f|
+        = f.label :text, 'Edit answer'
+        = f.text_area :text
+        .update_errors
+        br
+        = f.submit 'Update answer'
+
+    - if user_signed_in?
+      - if answer.question.user_id == current_user.id && !answer.best
+       =link_to 'Best answer', best_answer_answer_path(answer), method: :post
+       =link_to image_tag 'grayg.png', width: '32', height: '32', alt: 'Best answer?'

@@ -1,0 +1,4 @@
+@users.each do |a|
+a.name
+ = link_to 'Edit answer', edit_question_answer_path(@question, @answer)
+ - if current_user && current_user.id == @answer.user_id
